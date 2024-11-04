@@ -12,8 +12,14 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Caminho do arquivo data.json
-const dataFilePath = path.join(__dirname, 'data.json');
+// Caminho do arquivo data.json em /tmp para poder escrever
+const dataFilePath = '/tmp/data.json';
+const originalDataFilePath = path.join(__dirname, 'data.json');
+
+// Verifica se o arquivo já existe em /tmp, se não, copia o arquivo original
+if (!fs.existsSync(dataFilePath)) {
+    fs.copyFileSync(originalDataFilePath, dataFilePath);
+}
 
 // Rota para obter produtos
 app.get('/api/products', (req, res) => {
